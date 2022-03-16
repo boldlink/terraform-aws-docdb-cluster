@@ -18,7 +18,7 @@ variable "backup_retention_period" {
 }
 
 variable "cluster_identifier_prefix" {
-  description = "Optional, Forces new resource) Creates a unique cluster identifier beginning with the specified prefix. Conflicts with cluster_identifier."
+  description = "(Optional, Forces new resource) Creates a unique cluster identifier beginning with the specified prefix. Conflicts with cluster_identifier."
   type        = string
   default     = null
 }

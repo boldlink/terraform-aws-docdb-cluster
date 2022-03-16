@@ -1,5 +1,13 @@
-# terraform-aws-docdb-cluster
-A Module that Manages a DocDB Cluster
+## Description
+This Terraform module Manages a DocDB Cluster.
+
+Examples available [here](https://github.com/boldlink/terraform-aws-docdb-cluster/tree/main/examples)
+
+## Documentation
+
+[AWS DocumentDB Cluster Documentation ](https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-create.html)
+[Terraform DocumentDB Cluster Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster)
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

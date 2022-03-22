@@ -34,6 +34,34 @@ resource "aws_docdb_cluster" "this" {
   }
 }
 
+resource "aws_docdb_cluster_parameter_group" "this" {
+  count       = var.create_cluster_parameter_group ? 1 : 0
+  name        = var.name
+  name_prefix = var.name_prefix
+  family      = var.family
+  description = "DocumentDB cluster parameter group"
+  dynamic "parameter" {
+    for_each = var.cluster_parameters
+    content {
+      name  = lookup(parameter.value, "name", null)
+      value = lookup(parameter.value, "value", null)
+    }
+  }
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+}
+
+resource "aws_docdb_cluster_snapshot" "this" {
+  count                          = var.create_cluster_snapshot ? 1 : 0
+  db_cluster_identifier          = var.db_cluster_identifier
+  db_cluster_snapshot_identifier = var.db_cluster_snapshot_identifier
+
+}
+
 resource "aws_security_group" "this" {
   count       = var.create_security_group ? 1 : 0
   name        = var.sg_name

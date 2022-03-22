@@ -214,3 +214,58 @@ variable "to_port" {
   type        = number
   default     = 0
 }
+
+# Cluster Parameter Group
+
+variable "create_cluster_parameter_group" {
+  description = "Whether to create cluster parameter group"
+  type        = bool
+  default     = false
+}
+
+variable "name" {
+  description = "(Optional, Forces new resource) The name of the documentDB cluster parameter group. If omitted, Terraform will assign a random, unique name."
+  type        = string
+  default     = null
+}
+
+variable "name_prefix" {
+  description = "Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
+  type        = string
+  default     = null
+}
+
+variable "family" {
+  description = "(Required, Forces new resource) The family of the documentDB cluster parameter group."
+  type        = string
+  default     = "docdb3.6"
+}
+
+variable "cluster_parameters" {
+  description = "(Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources."
+  type = list(object({
+    name         = string
+    value        = string
+    apply_method = string
+  }))
+  default = []
+}
+
+# DocumentDB cluster snapshot resource
+variable "create_cluster_snapshot" {
+  description = "Whether to create cluster parameter group"
+  type        = bool
+  default     = false
+}
+
+variable "db_cluster_identifier" {
+  description = "(Required) The DocDB Cluster Identifier from which to take the snapshot."
+  type        = string
+}
+
+variable "db_cluster_snapshot_identifier" {
+  description = "(Required) The Identifier for the snapshot."
+  type        = string
+  default     = ""
+
+}

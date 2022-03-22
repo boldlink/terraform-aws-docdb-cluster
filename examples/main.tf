@@ -19,6 +19,7 @@ resource "random_string" "master_username" {
   length  = 6
   special = false
   upper   = false
+  number  = false
 }
 
 resource "random_password" "master_password" {
@@ -49,7 +50,7 @@ module "docdb_cluster" {
   cluster_identifier              = "${local.cluster_name}-${uuid()}"
   master_username                 = random_string.master_username.result
   master_password                 = random_password.master_password.result
-  final_snapshot_identifier       = "${local.cluster_name}-snapshot-${uuid()}"
+  final_snapshot_identifier       = "${local.cluster_name}-final-snapshot-${uuid()}"
   preferred_backup_window         = "02:00-03:00"
   preferred_maintenance_window    = "sun:06:00-sun:09:00"
   storage_encrypted               = true
@@ -59,7 +60,18 @@ module "docdb_cluster" {
   enabled_cloudwatch_logs_exports = ["audit", "profiler"]
   create_security_group           = true
   sg_name                         = "${local.cluster_name}-securitygroup-${uuid()}"
-  skip_final_snapshot             = true
+  create_cluster_snapshot         = true
+  db_cluster_identifier           = module.docdb_cluster.id
+  db_cluster_snapshot_identifier  = "${local.cluster_name}-snapshot-${uuid()}"
+  create_cluster_parameter_group  = true
+  name                            = "${local.cluster_name}-parameter-group-${uuid()}"
+  cluster_parameters = [
+    {
+      name         = "tls"
+      value        = "enabled"
+      apply_method = "immediate"
+    }
+  ]
 }
 
 output "docdb_cluster" {

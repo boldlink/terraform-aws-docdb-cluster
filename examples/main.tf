@@ -65,6 +65,7 @@ module "docdb_cluster" {
   db_cluster_snapshot_identifier  = "${local.cluster_name}-snapshot-${uuid()}"
   create_cluster_parameter_group  = true
   name                            = "${local.cluster_name}-parameter-group-${uuid()}"
+  allowed_cidr_blocks             = [data.aws_vpc.default.cidr_block]
   cluster_parameters = [
     {
       name         = "tls"

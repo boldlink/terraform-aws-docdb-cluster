@@ -203,6 +203,12 @@ variable "cidr_blocks" {
   type        = string
 }
 
+variable "allowed_cidr_blocks" {
+  description = "List of CIDR blocks allowed to access the cluster"
+  type        = list(string)
+  default     = []
+}
+
 variable "from_port" {
   description = "(Required) Start port (or ICMP type number if protocol is 'icmp' or 'icmpv6')"
   type        = number

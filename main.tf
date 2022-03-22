@@ -75,7 +75,7 @@ resource "aws_security_group" "this" {
   )
 }
 
-resource "aws_security_group_rule" "ingress" {
+resource "aws_security_group_rule" "ingress_sg" {
   count                    = var.create_security_group ? 1 : 0
   type                     = var.ingress_type
   description              = "Allow inbound traffic from existing Security Groups"
@@ -84,6 +84,17 @@ resource "aws_security_group_rule" "ingress" {
   protocol                 = var.ingress_protocol
   source_security_group_id = join("", aws_security_group.this.*.id)
   security_group_id        = join("", aws_security_group.this.*.id)
+}
+
+resource "aws_security_group_rule" "ingress_cidr_blocks" {
+  count             = var.create_security_group ? 1 : 0
+  type              = var.ingress_type
+  description       = "Allow inbound traffic from existing CIDR blocks"
+  from_port         = var.port
+  to_port           = var.port
+  protocol          = var.ingress_protocol
+  cidr_blocks       = var.allowed_cidr_blocks
+  security_group_id = join("", aws_security_group.this.*.id)
 }
 
 resource "aws_security_group_rule" "egress" {

@@ -15,7 +15,7 @@ variable "availability_zones" {
 variable "backup_retention_period" {
   description = "(Optional) The days to retain backups for. Default 1"
   type        = number
-  default     = 1
+  default     = 7
 }
 
 variable "cluster_identifier_prefix" {
@@ -26,12 +26,6 @@ variable "cluster_identifier_prefix" {
 
 variable "cluster_identifier" {
   description = "(Optional, Forces new resources) The cluster identifier. If omitted, Terraform will assign a random, unique identifier."
-  type        = string
-  default     = null
-}
-
-variable "db_subnet_group_name" {
-  description = "(Optional) A DB subnet group to associate with this DB instance."
   type        = string
   default     = null
 }
@@ -123,7 +117,6 @@ variable "storage_encrypted" {
 }
 
 #Tags
-
 variable "environment" {
   type        = string
   description = "The environment this resource is being deployed to"
@@ -146,8 +139,26 @@ variable "cluster_timeouts" {
   default = []
 }
 
-# Cluster Instance
+# DocDB SubnetGroup
+variable "subnet_name" {
+  description = " (Optional, Forces new resource) The name of the docDB subnet group. If omitted, Terraform will assign a random, unique name."
+  type        = string
+  default     = null
+}
 
+variable "subnet_name_prefix" {
+  description = "(Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
+  type        = string
+  default     = null
+}
+
+variable "subnet_ids" {
+  description = "(Required) A list of VPC subnet IDs."
+  default     = []
+  type        = list(string)
+}
+
+# Cluster Instance
 variable "instance_count" {
   description = "Number of DocumentDB cluster instances to be created."
   type        = number

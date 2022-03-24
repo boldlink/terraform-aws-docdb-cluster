@@ -17,7 +17,6 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_docdb_cluster"></a> [docdb\_cluster](#module\_docdb\_cluster) | ./../ | n/a |
-| <a name="module_docdb_subnet_group"></a> [docdb\_subnet\_group](#module\_docdb\_subnet\_group) | boldlink/docdb-subnet-group/aws | 1.0.0 |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms-key/aws | 1.0.0 |
 
 ## Resources

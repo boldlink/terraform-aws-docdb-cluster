@@ -8,7 +8,7 @@ resource "aws_docdb_cluster" "this" {
   backup_retention_period         = var.backup_retention_period
   cluster_identifier_prefix       = var.cluster_identifier_prefix
   cluster_identifier              = var.cluster_identifier
-  db_subnet_group_name            = var.db_subnet_group_name
+  db_subnet_group_name            = aws_docdb_subnet_group.this.id
   db_cluster_parameter_group_name = var.db_cluster_parameter_group_name
   deletion_protection             = var.deletion_protection
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
@@ -57,6 +57,22 @@ resource "aws_docdb_cluster_parameter_group" "this" {
       value = lookup(parameter.value, "value", null)
     }
   }
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+}
+
+# #############################################
+# DocDB SubnetGroup Group
+# #############################################
+resource "aws_docdb_subnet_group" "this" {
+  name        = var.subnet_name
+  name_prefix = var.subnet_name_prefix
+  description = "The description of the docDB subnet group."
+  subnet_ids  = var.subnet_ids
   tags = merge(
     {
       "Environment" = var.environment

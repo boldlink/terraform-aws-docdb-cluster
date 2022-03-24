@@ -29,14 +29,6 @@ resource "random_password" "master_password" {
   upper   = false
 }
 
-module "docdb_subnet_group" {
-  source      = "boldlink/docdb-subnet-group/aws"
-  version     = "1.0.0"
-  name        = "${local.cluster_name}-subnetgroup-${uuid()}"
-  subnet_ids  = data.aws_subnets.default.ids
-  environment = local.environment
-}
-
 module "kms_key" {
   source              = "boldlink/kms-key/aws"
   version             = "1.0.0"
@@ -55,13 +47,14 @@ module "docdb_cluster" {
   storage_encrypted               = true
   kms_key_id                      = join("", module.kms_key.*.arn)
   vpc_id                          = data.aws_vpc.default.id
-  db_subnet_group_name            = join("", module.docdb_subnet_group.*.id)
   enabled_cloudwatch_logs_exports = ["audit", "profiler"]
   create_security_group           = true
   sg_name                         = "${local.cluster_name}-securitygroup-${uuid()}"
-  instance_count                  = 2
-  identifier                      = "${local.cluster_name}-instance" #-${count.index}"
+  instance_count                  = local.count
+  identifier                      = "${local.cluster_name}-instance"
   instance_class                  = "db.t3.medium"
+  subnet_name                     = "${local.cluster_name}-subnetgroup-${uuid()}"
+  subnet_ids                      = data.aws_subnets.default.ids
   environment                     = local.environment
   create_cluster_parameter_group  = true
   name                            = "${local.cluster_name}-parameter-group-${uuid()}"

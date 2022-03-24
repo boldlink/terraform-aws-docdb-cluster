@@ -150,9 +150,9 @@ variable "cluster_timeouts" {
 
 variable "instance_count" {
   description = "Number of DocumentDB cluster instances to be created."
-  type = number
-  default = 3
-  
+  type        = number
+  default     = 3
+
 }
 variable "instance_class" {
   description = "(Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium"

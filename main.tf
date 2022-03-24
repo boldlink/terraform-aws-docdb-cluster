@@ -69,7 +69,7 @@ resource "aws_docdb_cluster_parameter_group" "this" {
 # DocDB Cluster Instance
 # #############################################
 resource "aws_docdb_cluster_instance" "this" {
-  count = var.instance_count
+  count                        = var.instance_count
   apply_immediately            = var.apply_immediately
   auto_minor_version_upgrade   = var.auto_minor_version_upgrade
   availability_zone            = var.availability_zone

@@ -59,10 +59,10 @@ module "docdb_cluster" {
   enabled_cloudwatch_logs_exports = ["audit", "profiler"]
   create_security_group           = true
   sg_name                         = "${local.cluster_name}-securitygroup-${uuid()}"
-  instance_count              = 2
-  identifier         = "${local.cluster_name}-instance"  #-${count.index}"
-  instance_class     = "db.t3.medium"
-  environment        = local.environment
+  instance_count                  = 2
+  identifier                      = "${local.cluster_name}-instance" #-${count.index}"
+  instance_class                  = "db.t3.medium"
+  environment                     = local.environment
   create_cluster_parameter_group  = true
   name                            = "${local.cluster_name}-parameter-group-${uuid()}"
   allowed_cidr_blocks             = [data.aws_vpc.default.cidr_block]

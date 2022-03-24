@@ -1,6 +1,7 @@
 
+# DOcDB Cluster
 variable "apply_immediately" {
-  description = "(Optional) Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. Default is false."
+  description = "(Optional) Specifies whether any cluster or database modifications are applied immediately, or during the next maintenance window. Default is false."
   type        = string
   default     = false
 }
@@ -60,7 +61,7 @@ variable "engine_version" {
 }
 
 variable "engine" {
-  description = "(Optional) The name of the database engine to be used for this DB cluster. Defaults to docdb. Valid Values: docdb"
+  description = "(Optional) The name of the database engine to be used for this DB cluster and instance. Defaults to docdb. Valid Values: docdb"
   type        = string
   default     = "docdb"
 }
@@ -94,13 +95,13 @@ variable "port" {
 variable "preferred_backup_window" {
   description = "(Optional) The daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter.Time in UTC Default: A 30-minute window selected at random from an 8-hour block of time per regionE.g., 04:00-09:00"
   type        = string
-  default     = "07:00-09:00"
+  default     = "04:00-05:00"
 }
 
 variable "preferred_maintenance_window" {
   description = "(Optional) The weekly time range during which system maintenance can occur, in (UTC) e.g., wed:04:00-wed:04:30"
   type        = string
-  default     = "sun:04:00-sun:04:30"
+  default     = "sun:01:00-sun:03:30"
 }
 
 variable "skip_final_snapshot" {
@@ -135,26 +136,105 @@ variable "other_tags" {
   default     = {}
 }
 
-variable "create" {
-  description = "Used for Cluster creation"
-  type        = string
-  default     = "120m"
+variable "cluster_timeouts" {
+  description = "aws_docdb_cluster provides the following Timeouts configuration options: create, update, delete"
+  type = list(object({
+    create = string
+    update = string
+    delete = string
+  }))
+  default = []
 }
 
-variable "update" {
-  description = "Used for Cluster modifications"
+# Cluster Instance
+
+variable "instance_count" {
+  description = "Number of DocumentDB cluster instances to be created."
+  type = number
+  default = 3
+  
+}
+variable "instance_class" {
+  description = "(Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium"
   type        = string
-  default     = "120m"
 }
 
-variable "delete" {
-  description = "Used for destroying cluster. This includes any cleanup task during the destroying process."
+variable "auto_minor_version_upgrade" {
+  description = "(Optional) Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window. Default true"
+  type        = bool
+  default     = true
+}
+
+variable "availability_zone" {
+  description = " (Optional, Computed) The EC2 Availability Zone that the DB instance is created in."
   type        = string
-  default     = "120m"
+  default     = null
+}
+
+variable "identifier" {
+  description = "Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier."
+  type        = string
+  default     = null
+}
+
+variable "identifier_prefix" {
+  description = "(Optional, Forces new resource) Creates a unique identifier beginning with the specified prefix. Conflicts with identifier"
+  type        = string
+  default     = null
+}
+
+variable "promotion_tier" {
+  description = "(Optional) Default 0. Failover Priority setting on instance level. The reader who has lower tier has higher priority to get promoter to writer."
+  type        = number
+  default     = 0
+}
+
+variable "instance_timeouts" {
+  description = "aws_docdb_cluster_instance provides the following Timeouts configuration options: create, update, delete"
+  type = list(object({
+    create = string
+    update = string
+    delete = string
+  }))
+  default = []
+}
+
+# Cluster Parameter Group
+variable "create_cluster_parameter_group" {
+  description = "Whether to create cluster parameter group"
+  type        = bool
+  default     = false
+}
+
+variable "name" {
+  description = "(Optional, Forces new resource) The name of the documentDB cluster parameter group. If omitted, Terraform will assign a random, unique name."
+  type        = string
+  default     = null
+}
+
+variable "name_prefix" {
+  description = "Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
+  type        = string
+  default     = null
+}
+
+variable "family" {
+  description = "(Required, Forces new resource) The family of the documentDB cluster parameter group."
+  type        = string
+  default     = "docdb3.6"
+}
+
+variable "cluster_parameters" {
+  description = "(Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources."
+  type = list(object({
+    name         = string
+    value        = string
+    apply_method = string
+  }))
+  default = []
 }
 
 # Security Group
-
 variable "vpc_id" {
   description = "(Optional, Forces new resource) VPC ID"
   type        = string
@@ -219,59 +299,4 @@ variable "to_port" {
   description = "(Required) End port (or ICMP code if protocol is 'icmp')"
   type        = number
   default     = 0
-}
-
-# Cluster Parameter Group
-
-variable "create_cluster_parameter_group" {
-  description = "Whether to create cluster parameter group"
-  type        = bool
-  default     = false
-}
-
-variable "name" {
-  description = "(Optional, Forces new resource) The name of the documentDB cluster parameter group. If omitted, Terraform will assign a random, unique name."
-  type        = string
-  default     = null
-}
-
-variable "name_prefix" {
-  description = "Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
-  type        = string
-  default     = null
-}
-
-variable "family" {
-  description = "(Required, Forces new resource) The family of the documentDB cluster parameter group."
-  type        = string
-  default     = "docdb3.6"
-}
-
-variable "cluster_parameters" {
-  description = "(Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources."
-  type = list(object({
-    name         = string
-    value        = string
-    apply_method = string
-  }))
-  default = []
-}
-
-# DocumentDB cluster snapshot resource
-variable "create_cluster_snapshot" {
-  description = "Whether to create cluster parameter group"
-  type        = bool
-  default     = false
-}
-
-variable "db_cluster_identifier" {
-  description = "(Required) The DocDB Cluster Identifier from which to take the snapshot."
-  type        = string
-}
-
-variable "db_cluster_snapshot_identifier" {
-  description = "(Required) The Identifier for the snapshot."
-  type        = string
-  default     = ""
-
 }

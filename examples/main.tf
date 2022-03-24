@@ -2,6 +2,7 @@
 locals {
   cluster_name = "sample-cluster"
   environment  = "test"
+  count        = 3
 }
 
 data "aws_vpc" "default" {
@@ -40,8 +41,8 @@ module "kms_key" {
   source              = "boldlink/kms-key/aws"
   version             = "1.0.0"
   description         = "A test kms key for DocDB cluster"
-  name                = "example-key"
-  alias_name          = "alias/docdb-key-alias"
+  name                = "${local.cluster_name}-kms-key-${uuid()}"
+  alias_name          = "alias/docdb-cluster-key-alias-${uuid()}"
   enable_key_rotation = true
 }
 
@@ -51,8 +52,6 @@ module "docdb_cluster" {
   master_username                 = random_string.master_username.result
   master_password                 = random_password.master_password.result
   final_snapshot_identifier       = "${local.cluster_name}-final-snapshot-${uuid()}"
-  preferred_backup_window         = "02:00-03:00"
-  preferred_maintenance_window    = "sun:06:00-sun:09:00"
   storage_encrypted               = true
   kms_key_id                      = join("", module.kms_key.*.arn)
   vpc_id                          = data.aws_vpc.default.id
@@ -60,9 +59,10 @@ module "docdb_cluster" {
   enabled_cloudwatch_logs_exports = ["audit", "profiler"]
   create_security_group           = true
   sg_name                         = "${local.cluster_name}-securitygroup-${uuid()}"
-  create_cluster_snapshot         = true
-  db_cluster_identifier           = module.docdb_cluster.id
-  db_cluster_snapshot_identifier  = "${local.cluster_name}-snapshot-${uuid()}"
+  instance_count              = 2
+  identifier         = "${local.cluster_name}-instance"  #-${count.index}"
+  instance_class     = "db.t3.medium"
+  environment        = local.environment
   create_cluster_parameter_group  = true
   name                            = "${local.cluster_name}-parameter-group-${uuid()}"
   allowed_cidr_blocks             = [data.aws_vpc.default.cidr_block]

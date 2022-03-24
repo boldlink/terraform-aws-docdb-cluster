@@ -1,3 +1,7 @@
+
+# #############################################
+# DocDB cluster Resource
+# #############################################
 resource "aws_docdb_cluster" "this" {
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
@@ -27,13 +31,19 @@ resource "aws_docdb_cluster" "this" {
     var.other_tags,
   )
   vpc_security_group_ids = [join("", aws_security_group.this.*.id)]
-  timeouts {
-    create = var.create
-    update = var.update
-    delete = var.delete
+  dynamic "timeouts" {
+    for_each = var.cluster_timeouts
+    content {
+      create = lookup(timeouts.value, "create", "90m")
+      update = lookup(timeouts.value, "update", "90m")
+      delete = lookup(timeouts.value, "delete", "90m")
+    }
   }
 }
 
+# #############################################
+# DocDB Parameter Group
+# #############################################
 resource "aws_docdb_cluster_parameter_group" "this" {
   count       = var.create_cluster_parameter_group ? 1 : 0
   name        = var.name
@@ -55,13 +65,40 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   )
 }
 
-resource "aws_docdb_cluster_snapshot" "this" {
-  count                          = var.create_cluster_snapshot ? 1 : 0
-  db_cluster_identifier          = var.db_cluster_identifier
-  db_cluster_snapshot_identifier = var.db_cluster_snapshot_identifier
-
+# #############################################
+# DocDB Cluster Instance
+# #############################################
+resource "aws_docdb_cluster_instance" "this" {
+  count = var.instance_count
+  apply_immediately            = var.apply_immediately
+  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
+  availability_zone            = var.availability_zone
+  cluster_identifier           = aws_docdb_cluster.this.id
+  engine                       = var.engine
+  identifier                   = "${var.identifier}-${count.index}"
+  identifier_prefix            = var.identifier_prefix
+  instance_class               = var.instance_class
+  preferred_maintenance_window = var.preferred_maintenance_window
+  promotion_tier               = var.promotion_tier
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+  dynamic "timeouts" {
+    for_each = var.instance_timeouts
+    content {
+      create = lookup(timeouts.value, "create", "90m")
+      update = lookup(timeouts.value, "update", "90m")
+      delete = lookup(timeouts.value, "delete", "90m")
+    }
+  }
 }
 
+# #############################################
+# Security Group for DocDB cluster
+# #############################################
 resource "aws_security_group" "this" {
   count       = var.create_security_group ? 1 : 0
   name        = var.sg_name

@@ -1,10 +1,14 @@
+
+# #############################################
+# DocDB cluster Resource
+# #############################################
 resource "aws_docdb_cluster" "this" {
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
   backup_retention_period         = var.backup_retention_period
   cluster_identifier_prefix       = var.cluster_identifier_prefix
   cluster_identifier              = var.cluster_identifier
-  db_subnet_group_name            = var.db_subnet_group_name
+  db_subnet_group_name            = aws_docdb_subnet_group.this.id
   db_cluster_parameter_group_name = var.db_cluster_parameter_group_name
   deletion_protection             = var.deletion_protection
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
@@ -27,13 +31,90 @@ resource "aws_docdb_cluster" "this" {
     var.other_tags,
   )
   vpc_security_group_ids = [join("", aws_security_group.this.*.id)]
-  timeouts {
-    create = var.create
-    update = var.update
-    delete = var.delete
+  dynamic "timeouts" {
+    for_each = var.cluster_timeouts
+    content {
+      create = lookup(timeouts.value, "create", "90m")
+      update = lookup(timeouts.value, "update", "90m")
+      delete = lookup(timeouts.value, "delete", "90m")
+    }
   }
 }
 
+# #############################################
+# DocDB Parameter Group
+# #############################################
+resource "aws_docdb_cluster_parameter_group" "this" {
+  count       = var.create_cluster_parameter_group ? 1 : 0
+  name        = var.name
+  name_prefix = var.name_prefix
+  family      = var.family
+  description = "DocumentDB cluster parameter group"
+  dynamic "parameter" {
+    for_each = var.cluster_parameters
+    content {
+      name  = lookup(parameter.value, "name", null)
+      value = lookup(parameter.value, "value", null)
+    }
+  }
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+}
+
+# #############################################
+# DocDB SubnetGroup Group
+# #############################################
+resource "aws_docdb_subnet_group" "this" {
+  name        = var.subnet_name
+  name_prefix = var.subnet_name_prefix
+  description = "The description of the docDB subnet group."
+  subnet_ids  = var.subnet_ids
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+}
+
+# #############################################
+# DocDB Cluster Instance
+# #############################################
+resource "aws_docdb_cluster_instance" "this" {
+  count                        = var.instance_count
+  apply_immediately            = var.apply_immediately
+  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
+  availability_zone            = var.availability_zone
+  cluster_identifier           = aws_docdb_cluster.this.id
+  engine                       = var.engine
+  identifier                   = "${var.identifier}-${count.index}"
+  identifier_prefix            = var.identifier_prefix
+  instance_class               = var.instance_class
+  preferred_maintenance_window = var.preferred_maintenance_window
+  promotion_tier               = var.promotion_tier
+  tags = merge(
+    {
+      "Environment" = var.environment
+    },
+    var.other_tags,
+  )
+  dynamic "timeouts" {
+    for_each = var.instance_timeouts
+    content {
+      create = lookup(timeouts.value, "create", "90m")
+      update = lookup(timeouts.value, "update", "90m")
+      delete = lookup(timeouts.value, "delete", "90m")
+    }
+  }
+}
+
+# #############################################
+# Security Group for DocDB cluster
+# #############################################
 resource "aws_security_group" "this" {
   count       = var.create_security_group ? 1 : 0
   name        = var.sg_name
@@ -47,7 +128,7 @@ resource "aws_security_group" "this" {
   )
 }
 
-resource "aws_security_group_rule" "ingress" {
+resource "aws_security_group_rule" "ingress_sg" {
   count                    = var.create_security_group ? 1 : 0
   type                     = var.ingress_type
   description              = "Allow inbound traffic from existing Security Groups"
@@ -56,6 +137,17 @@ resource "aws_security_group_rule" "ingress" {
   protocol                 = var.ingress_protocol
   source_security_group_id = join("", aws_security_group.this.*.id)
   security_group_id        = join("", aws_security_group.this.*.id)
+}
+
+resource "aws_security_group_rule" "ingress_cidr_blocks" {
+  count             = var.create_security_group ? 1 : 0
+  type              = var.ingress_type
+  description       = "Allow inbound traffic from existing CIDR blocks"
+  from_port         = var.port
+  to_port           = var.port
+  protocol          = var.ingress_protocol
+  cidr_blocks       = var.allowed_cidr_blocks
+  security_group_id = join("", aws_security_group.this.*.id)
 }
 
 resource "aws_security_group_rule" "egress" {

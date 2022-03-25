@@ -183,7 +183,7 @@ variable "availability_zone" {
 }
 
 variable "identifier" {
-  description = "Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier."
+  description = "(Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier."
   type        = string
   default     = null
 }
@@ -224,7 +224,7 @@ variable "name" {
 }
 
 variable "name_prefix" {
-  description = "Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
+  description = "(Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
   type        = string
   default     = null
 }

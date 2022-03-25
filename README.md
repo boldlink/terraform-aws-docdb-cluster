@@ -6,6 +6,7 @@ Examples available [here](https://github.com/boldlink/terraform-aws-docdb-cluste
 ## Documentation
 
 [AWS DocumentDB Cluster Documentation ](https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-create.html)
+
 [Terraform DocumentDB Cluster Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -66,7 +67,7 @@ No modules.
 | <a name="input_family"></a> [family](#input\_family) | (Required, Forces new resource) The family of the documentDB cluster parameter group. | `string` | `"docdb3.6"` | no |
 | <a name="input_final_snapshot_identifier"></a> [final\_snapshot\_identifier](#input\_final\_snapshot\_identifier) | (Optional) The name of your final DB snapshot when this DB cluster is deleted. If omitted, no final snapshot will be made. | `string` | `null` | no |
 | <a name="input_from_port"></a> [from\_port](#input\_from\_port) | (Required) Start port (or ICMP type number if protocol is 'icmp' or 'icmpv6') | `number` | `0` | no |
-| <a name="input_identifier"></a> [identifier](#input\_identifier) | Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier. | `string` | `null` | no |
+| <a name="input_identifier"></a> [identifier](#input\_identifier) | (Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier. | `string` | `null` | no |
 | <a name="input_identifier_prefix"></a> [identifier\_prefix](#input\_identifier\_prefix) | (Optional, Forces new resource) Creates a unique identifier beginning with the specified prefix. Conflicts with identifier | `string` | `null` | no |
 | <a name="input_ingress_protocol"></a> [ingress\_protocol](#input\_ingress\_protocol) | (Required) Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number | `string` | `"tcp"` | no |
 | <a name="input_ingress_type"></a> [ingress\_type](#input\_ingress\_type) | (Required) Type of rule being created. Valid options are ingress (inbound) or egress (outbound) | `string` | `"ingress"` | no |
@@ -77,7 +78,7 @@ No modules.
 | <a name="input_master_password"></a> [master\_password](#input\_master\_password) | (Required unless a snapshot\_identifier or unless a global\_cluster\_identifier is provided when the cluster is the 'secondary' cluster of a global database) Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file. | `string` | n/a | yes |
 | <a name="input_master_username"></a> [master\_username](#input\_master\_username) | (Required unless a snapshot\_identifier or unless a global\_cluster\_identifier is provided when the cluster is the 'secondary' cluster of a global database) Username for the master DB user | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Optional, Forces new resource) The name of the documentDB cluster parameter group. If omitted, Terraform will assign a random, unique name. | `string` | `null` | no |
-| <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name. | `string` | `null` | no |
+| <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | (Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name. | `string` | `null` | no |
 | <a name="input_other_tags"></a> [other\_tags](#input\_other\_tags) | For adding an additional values for tags | `map(string)` | `{}` | no |
 | <a name="input_port"></a> [port](#input\_port) | (Optional) The port on which the DB accepts connections | `number` | `27017` | no |
 | <a name="input_preferred_backup_window"></a> [preferred\_backup\_window](#input\_preferred\_backup\_window) | (Optional) The daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter.Time in UTC Default: A 30-minute window selected at random from an 8-hour block of time per regionE.g., 04:00-09:00 | `string` | `"04:00-05:00"` | no |

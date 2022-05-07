@@ -1,7 +1,10 @@
+
+[![Build Status](https://github.com/boldlink/terraform-aws-docdb/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/boldlink/terraform-aws-docdb/actions)
+
 ## Description
 This Terraform module Manages a DocDB Cluster.
 
-Examples available [here](https://github.com/boldlink/terraform-aws-docdb-cluster/tree/main/examples)
+Examples available [here](https://github.com/boldlink/terraform-aws-docdb/tree/main/examples)
 
 ## Documentation
 

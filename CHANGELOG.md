@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-- ...
+- Feature: DocDB Global cluster
 
 ## [1.1.0] - 2022-06-15
 - Refactored Examples (complete and minimum)
@@ -21,14 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature: Document db cluster Instance
 - Feature: DocumentDB SubnetGroup
 - Feature/fix
-- ...
 
 ## [1.0.0] - YYYY-MM-DD
 ### Description
 - Feature: DocumentDB cluster
 - Added: DocumentDB example
 - Feature/fix
-- ...
 
 [Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.1.0...HEAD
 

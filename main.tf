@@ -45,15 +45,39 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   name_prefix = var.name_prefix
   family      = var.family
   description = "${var.cluster_identifier} parameter group"
-  dynamic "parameter" {
-    for_each = var.cluster_parameters
-    content {
-      name  = lookup(parameter.value, "name")
-      value = lookup(parameter.value, "value")
-    }
+  parameter {
+    name  = "audit_logs"
+    value = "enabled"
   }
+
+  parameter {
+    name  = "change_stream_log_retention_duration"
+    value = var.change_stream_log_retention_duration
+  }
+
+  parameter {
+    name  = "profiler"
+    value = var.profiler
+  }
+
+  parameter {
+    name  = "profiler_threshold_ms"
+    value = var.profiler_threshold_ms
+  }
+
+  parameter {
+    name  = "tls"
+    value = var.tls
+  }
+
+  parameter {
+    name  = "ttl_monitor"
+    value = var.ttl_monitor
+  }
+
   tags = var.tags
 }
+
 
 # #############################################
 # DocDB SubnetGroup Group

@@ -226,17 +226,37 @@ variable "name_prefix" {
 variable "family" {
   description = "(Required, Forces new resource) The family of the documentDB cluster parameter group."
   type        = string
-  default     = "docdb3.6"
+  default     = "docdb4.0"
 }
 
-variable "cluster_parameters" {
-  description = "(Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources."
-  type = list(object({
-    name         = string
-    value        = string
-    apply_method = string
-  }))
-  default = []
+variable "change_stream_log_retention_duration" {
+  description = "(Optional) Change stream log retention duration. Allowed values: 3600-604800 "
+  type        = number
+  default     = 10800
+}
+
+variable "profiler" {
+  description = "(Optional) Enable profiler ? Allowed values: enabled, disabled"
+  type        = string
+  default     = "disabled"
+}
+
+variable "profiler_threshold_ms" {
+  description = "(Optional) set profiler threshold; value in milliseconds: Allowed values: 50-2147483646"
+  type        = number
+  default     = 100
+}
+
+variable "tls" {
+  description = "(Optional) Enable tls ? Allowed values: enabled, disabled"
+  type        = string
+  default     = "enabled"
+}
+
+variable "ttl_monitor" {
+  description = "(Optional) Enable tll_monitor ? Allowed values: enabled, disabled"
+  type        = string
+  default     = "enabled"
 }
 
 # Security Group

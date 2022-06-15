@@ -22,7 +22,6 @@ module "kms_key" {
 }
 
 module "complete_cluster" {
-  #checkov:skip=CKV_AWS_104: "Ensure DocDB has audit logs enabled"
   source                         = "./../../"
   availability_zones             = data.aws_availability_zones.available.names
   cluster_identifier             = local.cluster_name
@@ -39,13 +38,6 @@ module "complete_cluster" {
   create_cluster_parameter_group = true
   name                           = "${local.cluster_name}-parameter-group"
   allowed_cidr_blocks            = [data.aws_vpc.default.cidr_block]
-  cluster_parameters = [
-    {
-      name         = "audit_logs"
-      value        = "enabled"
-      apply_method = "pending-reboot"
-    }
-  ]
   tags = {
     environment        = "examples"
     "user::CostCenter" = "terraform-registry"

@@ -6,7 +6,7 @@ resource "aws_docdb_cluster" "this" {
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
   backup_retention_period         = var.backup_retention_period
-  cluster_identifier_prefix       = var.cluster_identifier_prefix
+  cluster_identifier_prefix       = var.cluster_identifier == null ? var.cluster_identifier_prefix : null
   cluster_identifier              = var.cluster_identifier
   db_subnet_group_name            = aws_docdb_subnet_group.this.id
   db_cluster_parameter_group_name = var.db_cluster_parameter_group_name
@@ -24,13 +24,8 @@ resource "aws_docdb_cluster" "this" {
   skip_final_snapshot             = var.skip_final_snapshot
   snapshot_identifier             = var.snapshot_identifier
   storage_encrypted               = var.storage_encrypted
-  tags = merge(
-    {
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
-  vpc_security_group_ids = [join("", aws_security_group.this.*.id)]
+  tags                            = var.tags
+  vpc_security_group_ids          = concat(var.vpc_security_group_ids, [aws_security_group.this.id])
   dynamic "timeouts" {
     for_each = var.cluster_timeouts
     content {
@@ -49,36 +44,26 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   name        = var.name
   name_prefix = var.name_prefix
   family      = var.family
-  description = "DocumentDB cluster parameter group"
+  description = "${var.cluster_identifier} parameter group"
   dynamic "parameter" {
     for_each = var.cluster_parameters
     content {
-      name  = lookup(parameter.value, "name", null)
-      value = lookup(parameter.value, "value", null)
+      name  = lookup(parameter.value, "name")
+      value = lookup(parameter.value, "value")
     }
   }
-  tags = merge(
-    {
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags = var.tags
 }
 
 # #############################################
 # DocDB SubnetGroup Group
 # #############################################
 resource "aws_docdb_subnet_group" "this" {
-  name        = var.subnet_name
+  name        = "${var.cluster_identifier}-subnet-group"
   name_prefix = var.subnet_name_prefix
-  description = "The description of the docDB subnet group."
+  description = "${var.cluster_identifier} subnet group."
   subnet_ids  = var.subnet_ids
-  tags = merge(
-    {
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags        = var.tags
 }
 
 # #############################################
@@ -92,16 +77,11 @@ resource "aws_docdb_cluster_instance" "this" {
   cluster_identifier           = aws_docdb_cluster.this.id
   engine                       = var.engine
   identifier                   = "${var.identifier}-${count.index}"
-  identifier_prefix            = var.identifier_prefix
+  identifier_prefix            = var.identifier == null ? var.identifier_prefix : null
   instance_class               = var.instance_class
   preferred_maintenance_window = var.preferred_maintenance_window
   promotion_tier               = var.promotion_tier
-  tags = merge(
-    {
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  tags                         = var.tags
   dynamic "timeouts" {
     for_each = var.instance_timeouts
     content {
@@ -116,16 +96,10 @@ resource "aws_docdb_cluster_instance" "this" {
 # Security Group for DocDB cluster
 # #############################################
 resource "aws_security_group" "this" {
-  count       = var.create_security_group ? 1 : 0
   name        = var.sg_name
   vpc_id      = var.vpc_id
-  description = "DocumentDB Security Group"
-  tags = merge(
-    {
-      "Environment" = var.environment
-    },
-    var.other_tags,
-  )
+  description = "${var.cluster_identifier} Security Group"
+  tags        = var.tags
 }
 
 resource "aws_security_group_rule" "ingress_sg" {

@@ -45,7 +45,7 @@ variable "deletion_protection" {
 variable "enabled_cloudwatch_logs_exports" {
   description = "(Optional) List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, profiler"
   type        = list(string)
-  default     = []
+  default     = ["audit", "profiler"]
 }
 
 variable "engine_version" {
@@ -113,18 +113,19 @@ variable "snapshot_identifier" {
 variable "storage_encrypted" {
   description = "(Optional) Specifies whether the DB cluster is encrypted. The default is false."
   type        = bool
-  default     = false
+  default     = true
+}
+
+variable "vpc_security_group_ids" {
+  description = "(Optional) List of VPC security groups to associate with the Cluster"
+  type        = list(string)
+  default     = []
+
 }
 
 #Tags
-variable "environment" {
-  type        = string
-  description = "The environment this resource is being deployed to"
-  default     = null
-}
-
-variable "other_tags" {
-  description = "For adding an additional values for tags"
+variable "tags" {
+  description = " (Optional) A map of tags to assign to the DB cluster. If configured with a provider default_tags configuration block present, tags with matching keys will overwrite those defined at the provider-level."
   type        = map(string)
   default     = {}
 }
@@ -140,12 +141,6 @@ variable "cluster_timeouts" {
 }
 
 # DocDB SubnetGroup
-variable "subnet_name" {
-  description = " (Optional, Forces new resource) The name of the docDB subnet group. If omitted, Terraform will assign a random, unique name."
-  type        = string
-  default     = null
-}
-
 variable "subnet_name_prefix" {
   description = "(Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name."
   type        = string
@@ -163,7 +158,6 @@ variable "instance_count" {
   description = "Number of DocumentDB cluster instances to be created."
   type        = number
   default     = 3
-
 }
 variable "instance_class" {
   description = "(Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium"

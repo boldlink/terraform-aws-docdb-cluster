@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - ...
 
-## [1.1.0] - 2022-06-16
+## [1.1.0] - 2022-06-15
 - Refactored Examples (complete and minimum)
 - Added Standard template files
 - Fixed security `vpc_security_group_ids`

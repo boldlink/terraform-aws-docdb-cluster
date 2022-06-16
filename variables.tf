@@ -60,12 +60,6 @@ variable "engine" {
   default     = "docdb"
 }
 
-variable "final_snapshot_identifier" {
-  description = "(Optional) The name of your final DB snapshot when this DB cluster is deleted. If omitted, no final snapshot will be made."
-  type        = string
-  default     = null
-}
-
 variable "kms_key_id" {
   description = "(Optional) The ARN for the KMS encryption key. When specifying kms_key_id, storage_encrypted needs to be set to true."
   type        = string
@@ -162,6 +156,7 @@ variable "instance_count" {
 variable "instance_class" {
   description = "(Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium"
   type        = string
+  default     = "db.t3.medium"
 }
 
 variable "auto_minor_version_upgrade" {
@@ -229,34 +224,14 @@ variable "family" {
   default     = "docdb4.0"
 }
 
-variable "change_stream_log_retention_duration" {
-  description = "(Optional) Change stream log retention duration. Allowed values: 3600-604800 "
-  type        = number
-  default     = 10800
-}
-
-variable "profiler" {
-  description = "(Optional) Enable profiler ? Allowed values: enabled, disabled"
-  type        = string
-  default     = "disabled"
-}
-
-variable "profiler_threshold_ms" {
-  description = "(Optional) set profiler threshold; value in milliseconds: Allowed values: 50-2147483646"
-  type        = number
-  default     = 100
-}
-
-variable "tls" {
-  description = "(Optional) Enable tls ? Allowed values: enabled, disabled"
-  type        = string
-  default     = "enabled"
-}
-
-variable "ttl_monitor" {
-  description = "(Optional) Enable tll_monitor ? Allowed values: enabled, disabled"
-  type        = string
-  default     = "enabled"
+variable "cluster_parameters" {
+  description = "(Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources."
+  type = list(object({
+    name         = string
+    value        = string
+    apply_method = string
+  }))
+  default = []
 }
 
 # Security Group

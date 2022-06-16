@@ -14,7 +14,7 @@ resource "aws_docdb_cluster" "this" {
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   engine_version                  = var.engine_version
   engine                          = var.engine
-  final_snapshot_identifier       = var.final_snapshot_identifier
+  final_snapshot_identifier       = "${var.cluster_identifier}-final-snapshot"
   kms_key_id                      = var.kms_key_id
   master_password                 = var.master_password
   master_username                 = var.master_username
@@ -45,34 +45,13 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   name_prefix = var.name_prefix
   family      = var.family
   description = "${var.cluster_identifier} parameter group"
-  parameter {
-    name  = "audit_logs"
-    value = "enabled"
-  }
-
-  parameter {
-    name  = "change_stream_log_retention_duration"
-    value = var.change_stream_log_retention_duration
-  }
-
-  parameter {
-    name  = "profiler"
-    value = var.profiler
-  }
-
-  parameter {
-    name  = "profiler_threshold_ms"
-    value = var.profiler_threshold_ms
-  }
-
-  parameter {
-    name  = "tls"
-    value = var.tls
-  }
-
-  parameter {
-    name  = "ttl_monitor"
-    value = var.ttl_monitor
+  dynamic "parameter" {
+    for_each = var.cluster_parameters
+    content {
+      name         = lookup(parameter.value, "name")
+      value        = lookup(parameter.value, "value")
+      apply_method = lookup(parameter.value, "apply_method", "immediate")
+    }
   }
 
   tags = var.tags

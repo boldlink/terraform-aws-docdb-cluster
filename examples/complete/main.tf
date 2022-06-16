@@ -22,6 +22,7 @@ module "kms_key" {
 }
 
 module "complete_cluster" {
+  #checkov:skip=CKV_AWS_104: "Ensure DocDB has audit logs enabled"
   source                         = "./../../"
   availability_zones             = data.aws_availability_zones.available.names
   cluster_identifier             = local.cluster_name

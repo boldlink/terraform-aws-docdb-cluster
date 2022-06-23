@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature: DocDB Global cluster.
 - Fix `Ensure DocDB has audit logs enabled`.
 
-## [1.1.0] - 2022-06-16
+## [1.1.0] - 2022-06-24
 - Refactored Examples (complete and minimum)
+- Added VPC in examples
 - Added Standard template files
 - Fixed security `vpc_security_group_ids`
 - Modified tags variable

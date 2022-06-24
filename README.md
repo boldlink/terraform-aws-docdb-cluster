@@ -1,8 +1,33 @@
+[![Build Status](https://github.com/boldlink/terraform-aws-docdb/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/boldlink/terraform-aws-docdb/actions)
+
+[<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
+
 ## Description
 This Terraform module Manages a DocDB Cluster.
 
-Examples available [here](https://github.com/boldlink/terraform-aws-docdb-cluster/tree/main/examples)
+Examples available [here](https://github.com/boldlink/terraform-aws-docdb/tree/main/examples)
 
+## Usage
+*NOTE*: These examples use the latest version of this module
+
+```console
+module "complete_cluster" {
+  source                    = "./../../"
+  cluster_identifier        = local.cluster_name
+  availability_zones        = data.aws_availability_zones.available.names
+  identifier                = "${local.cluster_name}-instance"
+  instance_class            = "db.t3.medium"
+  instance_count            = local.count
+  final_snapshot_identifier = "${local.cluster_name}-final-snapshot"
+  master_username           = random_string.master_username.result
+  master_password           = random_password.master_password.result
+  subnet_ids                = data.aws_subnets.default.ids
+  tags = {
+    environment        = "examples"
+    "user::CostCenter" = "terraform-registry"
+  }
+}
+```
 ## Documentation
 
 [AWS DocumentDB Cluster Documentation ](https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-create.html)
@@ -14,13 +39,14 @@ Examples available [here](https://github.com/boldlink/terraform-aws-docdb-cluste
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.11 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=4.15.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.5.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.18.0 |
 
 ## Modules
 
@@ -60,18 +86,16 @@ No modules.
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | (Optional) A value that indicates whether the DB cluster has deletion protection enabled. The database can't be deleted when deletion protection is enabled. By default, deletion protection is disabled. | `bool` | `false` | no |
 | <a name="input_egress_protocol"></a> [egress\_protocol](#input\_egress\_protocol) | (Required) Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number | `string` | `"-1"` | no |
 | <a name="input_egress_type"></a> [egress\_type](#input\_egress\_type) | (Required) Type of rule being created. Valid options are ingress (inbound) or egress (outbound) | `string` | `"egress"` | no |
-| <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | (Optional) List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, profiler | `list(string)` | `[]` | no |
+| <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | (Optional) List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, profiler | `list(string)` | <pre>[<br>  "audit",<br>  "profiler"<br>]</pre> | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | (Optional) The name of the database engine to be used for this DB cluster and instance. Defaults to docdb. Valid Values: docdb | `string` | `"docdb"` | no |
 | <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | (Optional) The database engine version. Updating this argument results in an outage. | `string` | `null` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | The environment this resource is being deployed to | `string` | `null` | no |
-| <a name="input_family"></a> [family](#input\_family) | (Required, Forces new resource) The family of the documentDB cluster parameter group. | `string` | `"docdb3.6"` | no |
-| <a name="input_final_snapshot_identifier"></a> [final\_snapshot\_identifier](#input\_final\_snapshot\_identifier) | (Optional) The name of your final DB snapshot when this DB cluster is deleted. If omitted, no final snapshot will be made. | `string` | `null` | no |
+| <a name="input_family"></a> [family](#input\_family) | (Required, Forces new resource) The family of the documentDB cluster parameter group. | `string` | `"docdb4.0"` | no |
 | <a name="input_from_port"></a> [from\_port](#input\_from\_port) | (Required) Start port (or ICMP type number if protocol is 'icmp' or 'icmpv6') | `number` | `0` | no |
 | <a name="input_identifier"></a> [identifier](#input\_identifier) | (Optional, Forces new resource) The identifier for the DocDB instance, if omitted, Terraform will assign a random, unique identifier. | `string` | `null` | no |
 | <a name="input_identifier_prefix"></a> [identifier\_prefix](#input\_identifier\_prefix) | (Optional, Forces new resource) Creates a unique identifier beginning with the specified prefix. Conflicts with identifier | `string` | `null` | no |
 | <a name="input_ingress_protocol"></a> [ingress\_protocol](#input\_ingress\_protocol) | (Required) Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number | `string` | `"tcp"` | no |
 | <a name="input_ingress_type"></a> [ingress\_type](#input\_ingress\_type) | (Required) Type of rule being created. Valid options are ingress (inbound) or egress (outbound) | `string` | `"ingress"` | no |
-| <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | (Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium | `string` | n/a | yes |
+| <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | (Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium | `string` | `"db.t3.medium"` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of DocumentDB cluster instances to be created. | `number` | `3` | no |
 | <a name="input_instance_timeouts"></a> [instance\_timeouts](#input\_instance\_timeouts) | aws\_docdb\_cluster\_instance provides the following Timeouts configuration options: create, update, delete | <pre>list(object({<br>    create = string<br>    update = string<br>    delete = string<br>  }))</pre> | `[]` | no |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | (Optional) The ARN for the KMS encryption key. When specifying kms\_key\_id, storage\_encrypted needs to be set to true. | `string` | `null` | no |
@@ -79,7 +103,6 @@ No modules.
 | <a name="input_master_username"></a> [master\_username](#input\_master\_username) | (Required unless a snapshot\_identifier or unless a global\_cluster\_identifier is provided when the cluster is the 'secondary' cluster of a global database) Username for the master DB user | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Optional, Forces new resource) The name of the documentDB cluster parameter group. If omitted, Terraform will assign a random, unique name. | `string` | `null` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | (Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name. | `string` | `null` | no |
-| <a name="input_other_tags"></a> [other\_tags](#input\_other\_tags) | For adding an additional values for tags | `map(string)` | `{}` | no |
 | <a name="input_port"></a> [port](#input\_port) | (Optional) The port on which the DB accepts connections | `number` | `27017` | no |
 | <a name="input_preferred_backup_window"></a> [preferred\_backup\_window](#input\_preferred\_backup\_window) | (Optional) The daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter.Time in UTC Default: A 30-minute window selected at random from an 8-hour block of time per regionE.g., 04:00-09:00 | `string` | `"04:00-05:00"` | no |
 | <a name="input_preferred_maintenance_window"></a> [preferred\_maintenance\_window](#input\_preferred\_maintenance\_window) | (Optional) The weekly time range during which system maintenance can occur, in (UTC) e.g., wed:04:00-wed:04:30 | `string` | `"sun:01:00-sun:03:30"` | no |
@@ -87,12 +110,13 @@ No modules.
 | <a name="input_sg_name"></a> [sg\_name](#input\_sg\_name) | (Optional, Forces new resource) Name of the security group. If omitted, Terraform will assign a random, unique name. | `string` | `null` | no |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | (Optional) Determines whether a final DB snapshot is created before the DB cluster is deleted. If true is specified, no DB snapshot is created. If false is specified, a DB snapshot is created before the DB cluster is deleted, using the value from final\_snapshot\_identifier. Default is false. | `bool` | `false` | no |
 | <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | (Optional) Specifies whether or not to create this cluster from a snapshot. You can use either the name or ARN when specifying a DB cluster snapshot, or the ARN when specifying a DB snapshot. | `string` | `null` | no |
-| <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | (Optional) Specifies whether the DB cluster is encrypted. The default is false. | `bool` | `false` | no |
+| <a name="input_storage_encrypted"></a> [storage\_encrypted](#input\_storage\_encrypted) | (Optional) Specifies whether the DB cluster is encrypted. The default is false. | `bool` | `true` | no |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | (Required) A list of VPC subnet IDs. | `list(string)` | `[]` | no |
-| <a name="input_subnet_name"></a> [subnet\_name](#input\_subnet\_name) | (Optional, Forces new resource) The name of the docDB subnet group. If omitted, Terraform will assign a random, unique name. | `string` | `null` | no |
 | <a name="input_subnet_name_prefix"></a> [subnet\_name\_prefix](#input\_subnet\_name\_prefix) | (Optional, Forces new resource) Creates a unique name beginning with the specified prefix. Conflicts with name. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A map of tags to assign to the DB cluster. If configured with a provider default\_tags configuration block present, tags with matching keys will overwrite those defined at the provider-level. | `map(string)` | `{}` | no |
 | <a name="input_to_port"></a> [to\_port](#input\_to\_port) | (Required) End port (or ICMP code if protocol is 'icmp') | `number` | `0` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | (Optional, Forces new resource) VPC ID | `string` | `null` | no |
+| <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | (Optional) List of VPC security groups to associate with the Cluster | `list(string)` | `[]` | no |
 
 ## Outputs
 
@@ -115,3 +139,25 @@ No modules.
 | <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all) | A map of tags assigned to the resource, including those inherited from the provider default\_tags |
 | <a name="output_writer"></a> [writer](#output\_writer) | Boolean indicating if this instance is writable. False indicates this instance is a read replica. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Third party software
+This repository uses third party software:
+* [pre-commit](https://pre-commit.com/) - Used to help ensure code and documentation consistency
+  * Install with `brew install pre-commit`
+  * Manually use with `pre-commit run`
+* [terraform 0.14.11](https://releases.hashicorp.com/terraform/0.14.11/) For backwards compatibility we are using version 0.14.11 for testing making this the min version tested and without issues with terraform-docs.
+* [terraform-docs](https://github.com/segmentio/terraform-docs) - Used to generate the [Inputs](#Inputs) and [Outputs](#Outputs) sections
+  * Install with `brew install terraform-docs`
+  * Manually use via pre-commit
+* [tflint](https://github.com/terraform-linters/tflint) - Used to lint the Terraform code
+  * Install with `brew install tflint`
+  * Manually use via pre-commit
+
+### Makefile
+The makefile contain in this repo is optimised for linux paths and the main purpose is to execute testing for now.
+* Create all tests:
+`$ make tests`
+* Clean all tests:
+`$ make clean`
+
+#### BOLDLink-SIG 2022

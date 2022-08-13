@@ -4,6 +4,16 @@
 
 # Terraform  module example of complete and most common configuration
 
+### Running this example
+The makefile contained in this example is optimized for linux paths and the main purpose is to run this example stack including creating supporting resources.
+
+```console
+make tests
+```
+* Clean example stack & supporting resources:
+```console
+make tfdestroy
+```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -18,7 +28,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.20.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.26.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.3.2 |
 
 ## Modules
@@ -26,7 +36,6 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_complete_cluster"></a> [complete\_cluster](#module\_complete\_cluster) | ./../../ | n/a |
-| <a name="module_docdb_vpc"></a> [docdb\_vpc](#module\_docdb\_vpc) | git::https://github.com/boldlink/terraform-aws-vpc.git | 2.0.3 |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | n/a |
 
 ## Resources
@@ -35,9 +44,9 @@
 |------|------|
 | [random_password.master_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.master_username](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
+| [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_vpc.supporting](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
 
 ## Inputs
 
@@ -45,9 +54,7 @@ No inputs.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_complete_cluster"></a> [complete\_cluster](#output\_complete\_cluster) | Example output for complete cluster. |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Third party software

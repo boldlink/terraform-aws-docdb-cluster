@@ -25,4 +25,3 @@ jobs:
         with:
           directory: .
           framework: terraform
-          download_external_modules: true

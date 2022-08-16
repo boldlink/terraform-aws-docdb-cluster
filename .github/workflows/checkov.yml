@@ -25,3 +25,5 @@ jobs:
         with:
           directory: .
           framework: terraform
+          download_external_modules: true
+          log_level: DEBUG

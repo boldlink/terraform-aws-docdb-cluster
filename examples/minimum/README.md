@@ -1,4 +1,5 @@
 [![Build Status](https://github.com/boldlink/terraform-aws-docdb/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/boldlink/terraform-aws-docdb/actions)
+[![Build Status](https://github.com/boldlink/terraform-aws-docdb/actions/workflows/checkov.yml/badge.svg)](https://github.com/boldlink/terraform-aws-docdb/actions)
 
 [<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
 

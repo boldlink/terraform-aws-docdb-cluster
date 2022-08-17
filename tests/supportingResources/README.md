@@ -30,7 +30,7 @@ This stack builds:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_ecs_vpc"></a> [ecs\_vpc](#module\_ecs\_vpc) | boldlink/vpc/aws | 2.0.3 |
+| <a name="module_docdb_vpc"></a> [docdb\_vpc](#module\_docdb\_vpc) | boldlink/vpc/aws | 2.0.3 |
 
 ## Resources
 

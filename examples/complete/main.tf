@@ -24,19 +24,19 @@ module "kms_key" {
 module "complete_cluster" {
   #checkov:skip=CKV_AWS_104: "Ensure DocDB has audit logs enabled"
   source                         = "./../../"
-  availability_zones             = data.aws_availability_zones.available.names
+  availability_zones             = local.azs
   cluster_identifier             = local.cluster_name
   master_username                = random_string.master_username.result
   master_password                = random_password.master_password.result
   kms_key_id                     = join("", module.kms_key.*.arn)
-  vpc_id                         = module.docdb_vpc.id
+  vpc_id                         = local.vpc_id
   create_security_group          = true
   sg_name                        = "${local.cluster_name}-securitygroup"
   identifier                     = "${local.cluster_name}-instance"
-  subnet_ids                     = flatten(module.docdb_vpc.private_subnet_id)
+  subnet_ids                     = local.subnet_ids
   create_cluster_parameter_group = true
   name                           = "${local.cluster_name}-parameter-group"
-  allowed_cidr_blocks            = [local.cidr_block]
+  allowed_cidr_blocks            = [data.aws_vpc.supporting.cidr_block]
   cluster_parameters = [
     {
       name         = "audit_logs"
@@ -64,19 +64,4 @@ module "complete_cluster" {
     environment        = "examples"
     "user::CostCenter" = "terraform-registry"
   }
-  depends_on = [
-    module.docdb_vpc
-  ]
-}
-
-module "docdb_vpc" {
-  source               = "git::https://github.com/boldlink/terraform-aws-vpc.git?ref=2.0.3"
-  name                 = "${local.cluster_name}-vpc"
-  account              = data.aws_caller_identity.current.account_id
-  region               = data.aws_region.current.name
-  cidr_block           = local.cidr_block
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-  private_subnets      = local.docdb_subnets
-  availability_zones   = local.azs
 }

@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Feature: DocDB Global cluster.
 - Fix `Ensure DocDB has audit logs enabled`.
-- fix: VPC used in example
+
+## [1.2.0] - 2022-08-13
+- Feat: Added supporting resource (VPC) to be used by all examples
+- Added a makefile in each example to be used in the case of a single example deployment.
 
 ## [1.1.0] - 2022-06-24
 - Refactored Examples (complete and minimum)
@@ -34,7 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added: DocumentDB example
 - Feature/fix
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.2.0...HEAD
+
+[1.2.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.2.0
 
 [1.1.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.1.0
 

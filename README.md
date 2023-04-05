@@ -53,7 +53,7 @@ module "complete_cluster" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.26.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.61.0 |
 
 ## Modules
 

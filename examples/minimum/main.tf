@@ -20,8 +20,5 @@ module "docdb_cluster" {
   master_password    = random_password.master_password.result
   vpc_id             = local.vpc_id
   subnet_ids         = local.subnet_ids
-  tags = {
-    environment        = "examples"
-    "user::CostCenter" = "terraform-registry"
-  }
+  tags               = local.tags
 }

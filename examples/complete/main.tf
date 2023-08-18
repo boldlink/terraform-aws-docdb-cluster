@@ -12,13 +12,11 @@ resource "random_password" "master_password" {
 }
 
 module "kms_key" {
+  #checkov:skip=CKV_TF_1:Ensure Terraform module sources use a commit hash
   source      = "boldlink/kms/aws"
   description = "kms key for ${local.cluster_name}"
   alias_name  = "alias/${local.cluster_name}-key-alias"
-  tags = {
-    environment        = "examples"
-    "user::CostCenter" = "terraform-registry"
-  }
+  tags        = local.tags
 }
 
 module "complete_cluster" {
@@ -35,7 +33,7 @@ module "complete_cluster" {
   identifier                     = "${local.cluster_name}-instance"
   subnet_ids                     = local.subnet_ids
   create_cluster_parameter_group = true
-  name                           = "${local.cluster_name}-parameter-group"
+  name                           = local.cluster_name
   allowed_cidr_blocks            = [data.aws_vpc.supporting.cidr_block]
   cluster_parameters = [
     {
@@ -60,8 +58,5 @@ module "complete_cluster" {
     }
   ]
 
-  tags = {
-    environment        = "examples"
-    "user::CostCenter" = "terraform-registry"
-  }
+  tags = local.tags
 }

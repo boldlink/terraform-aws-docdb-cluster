@@ -43,9 +43,9 @@ variable "enable_public_subnets" {
   default     = true
 }
 
-variable "enable_private_subnets" {
+variable "enable_internal_subnets" {
   type        = bool
-  description = "Whether to enable private subnets"
+  description = "Whether to enable internal subnets"
   default     = true
 }
 

@@ -5,6 +5,6 @@ locals {
   vpc_id                    = data.aws_vpc.supporting.id
   subnet_ids                = flatten(data.aws_subnets.database.ids)
   azs                       = [for subnet in data.aws_subnet.database : subnet.availability_zone]
-  vpc_cidr = data.aws_vpc.supporting.cidr_block
+  vpc_cidr                  = data.aws_vpc.supporting.cidr_block
   tags                      = merge({ "Name" = local.cluster_name }, var.tags)
 }

@@ -23,7 +23,7 @@ module "docdb_cluster" {
   subnet_ids         = local.subnet_ids
   tags               = local.tags
   security_group_ingress_rules = {
-      default =  {
+    default = {
       description = "Custom ingress traffic allowed to docdb cluster"
       from_port   = 27017
       to_port     = 27017

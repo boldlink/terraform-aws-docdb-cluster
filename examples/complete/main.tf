@@ -57,7 +57,7 @@ module "complete_cluster" {
   ]
 
   security_group_ingress_rules = {
-      default =  {
+    default = {
       description = "Custom ingress traffic allowed to docdb cluster"
       from_port   = 27017
       to_port     = 27017
@@ -67,7 +67,7 @@ module "complete_cluster" {
   }
 
   security_group_egress_rules = {
-      default =  {
+    default = {
       description = "Custom egress traffic allowed to docdb cluster"
       from_port   = 0
       to_port     = 0

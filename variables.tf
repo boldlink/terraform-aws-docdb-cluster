@@ -236,67 +236,24 @@ variable "cluster_parameters" {
 
 # Security Group
 variable "vpc_id" {
-  description = "(Optional, Forces new resource) VPC ID"
-  type        = string
-  default     = null
-}
-
-variable "sg_name" {
-  description = " (Optional, Forces new resource) Name of the security group. If omitted, Terraform will assign a random, unique name."
+  description = "(Optional, Forces new resource) VPC ID. Defaults to the region's default VPC."
   type        = string
   default     = null
 }
 
 variable "create_security_group" {
   description = "Whether to create a Security Group for DocDB cluster."
-  default     = false
+  default     = true
   type        = bool
 }
 
-variable "ingress_protocol" {
-  description = "(Required) Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
-  type        = string
-  default     = "tcp"
+variable "security_group_ingress_rules" {
+  description = "(Optional) Ingress rules to add to the security group"
+  type        = any
+  default     = {}
 }
-
-variable "ingress_type" {
-  description = " (Required) Type of rule being created. Valid options are ingress (inbound) or egress (outbound)"
-  type        = string
-  default     = "ingress"
-}
-
-variable "egress_protocol" {
-  description = "(Required) Protocol. If not icmp, icmpv6, tcp, udp, or all use the protocol number"
-  type        = string
-  default     = "-1"
-}
-
-variable "egress_type" {
-  description = " (Required) Type of rule being created. Valid options are ingress (inbound) or egress (outbound)"
-  type        = string
-  default     = "egress"
-}
-
-variable "cidr_blocks" {
-  description = "List of CIDR blocks"
-  default     = "0.0.0.0/0"
-  type        = string
-}
-
-variable "allowed_cidr_blocks" {
-  description = "List of CIDR blocks allowed to access the cluster"
-  type        = list(string)
-  default     = []
-}
-
-variable "from_port" {
-  description = "(Required) Start port (or ICMP type number if protocol is 'icmp' or 'icmpv6')"
-  type        = number
-  default     = 0
-}
-
-variable "to_port" {
-  description = "(Required) End port (or ICMP code if protocol is 'icmp')"
-  type        = number
-  default     = 0
+variable "security_group_egress_rules" {
+  description = "(Optional) Egress rules to add to the security group"
+  type        = any
+  default     = {}
 }

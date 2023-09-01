@@ -25,7 +25,7 @@ resource "aws_docdb_cluster" "this" {
   snapshot_identifier             = var.snapshot_identifier
   storage_encrypted               = var.storage_encrypted
   tags                            = var.tags
-  vpc_security_group_ids          = concat(var.vpc_security_group_ids, [aws_security_group.this.id])
+  vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, [aws_security_group.this[0].id])) #concat(var.vpc_security_group_ids, [aws_security_group.this.id])
   dynamic "timeouts" {
     for_each = var.cluster_timeouts
     content {
@@ -99,41 +99,35 @@ resource "aws_docdb_cluster_instance" "this" {
 # Security Group for DocDB cluster
 # #############################################
 resource "aws_security_group" "this" {
-  name        = var.sg_name
+  count       = var.create_security_group ? 1 : 0
+  name        = "${coalesce(var.cluster_identifier, var.cluster_identifier_prefix)}-security-group"
   vpc_id      = var.vpc_id
-  description = "${var.cluster_identifier} Security Group"
+  description = "${coalesce(var.cluster_identifier, var.cluster_identifier_prefix)} Security Group"
   tags        = var.tags
 }
 
-resource "aws_security_group_rule" "ingress_sg" {
-  count                    = var.create_security_group ? 1 : 0
-  type                     = var.ingress_type
-  description              = "Allow inbound traffic from existing Security Groups"
-  from_port                = var.port
-  to_port                  = var.port
-  protocol                 = var.ingress_protocol
-  source_security_group_id = join("", aws_security_group.this.*.id)
-  security_group_id        = join("", aws_security_group.this.*.id)
-}
-
-resource "aws_security_group_rule" "ingress_cidr_blocks" {
-  count             = var.create_security_group ? 1 : 0
-  type              = var.ingress_type
-  description       = "Allow inbound traffic from existing CIDR blocks"
-  from_port         = var.port
-  to_port           = var.port
-  protocol          = var.ingress_protocol
-  cidr_blocks       = var.allowed_cidr_blocks
-  security_group_id = join("", aws_security_group.this.*.id)
+resource "aws_security_group_rule" "ingress" {
+  for_each                 = var.security_group_ingress_rules
+  type                     = "ingress"
+  description              = lookup(each.value, "description", null)
+  from_port                = lookup(each.value, "from_port", 27017)
+  to_port                  = lookup(each.value, "to_port", 27017)
+  protocol                 = lookup(each.value, "protocol", "tcp")
+  cidr_blocks              = lookup(each.value, "cidr_blocks", [])
+  source_security_group_id = lookup(each.value, "source_security_group_id", null)
+  self                     = lookup(each.value, "self", null)
+  security_group_id        = aws_security_group.this[0].id
 }
 
 resource "aws_security_group_rule" "egress" {
-  count             = var.create_security_group ? 1 : 0
-  type              = var.egress_type
-  description       = "Allow all egress traffic"
-  from_port         = var.from_port
-  to_port           = var.to_port
-  protocol          = var.egress_protocol
-  cidr_blocks       = [var.cidr_blocks]
-  security_group_id = join("", aws_security_group.this.*.id)
+  for_each                 = var.security_group_egress_rules
+  type                     = "egress"
+  description              = lookup(each.value, "description", null)
+  from_port                = lookup(each.value, "from_port", 0)
+  to_port                  = lookup(each.value, "to_port", 0)
+  protocol                 = lookup(each.value, "protocol", "-1")
+  cidr_blocks              = lookup(each.value, "cidr_blocks", [])
+  source_security_group_id = lookup(each.value, "source_security_group_id", null)
+  self                     = lookup(each.value, "self", null)
+  security_group_id        = aws_security_group.this[0].id
 }

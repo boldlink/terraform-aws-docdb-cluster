@@ -1,8 +1,8 @@
 
-data "aws_subnets" "private" {
+data "aws_subnets" "database" {
   filter {
     name   = "tag:Name"
-    values = ["${local.supporting_resources_name}*.pri.*"]
+    values = ["${local.supporting_resources_name}*.int.*"]
   }
 }
 
@@ -13,7 +13,7 @@ data "aws_vpc" "supporting" {
   }
 }
 
-data "aws_subnet" "private" {
-  for_each = toset(data.aws_subnets.private.ids)
+data "aws_subnet" "database" {
+  for_each = toset(data.aws_subnets.database.ids)
   id       = each.value
 }

@@ -1,12 +1,12 @@
 resource "random_string" "master_username" {
-  length  = 6
+  length  = 8
   special = false
   upper   = false
   numeric = false
 }
 
 resource "random_password" "master_password" {
-  length  = 16
+  length  = 72
   special = false
   upper   = false
 }
@@ -20,21 +20,19 @@ module "kms_key" {
 }
 
 module "complete_cluster" {
-  #checkov:skip=CKV_AWS_104: "Ensure DocDB has audit logs enabled"
+  #checkov:skip=CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
   source                         = "./../../"
   availability_zones             = local.azs
   cluster_identifier             = local.cluster_name
   master_username                = random_string.master_username.result
   master_password                = random_password.master_password.result
-  kms_key_id                     = join("", module.kms_key.*.arn)
+  kms_key_id                     = module.kms_key.arn
   vpc_id                         = local.vpc_id
   create_security_group          = true
-  sg_name                        = "${local.cluster_name}-securitygroup"
   identifier                     = "${local.cluster_name}-instance"
   subnet_ids                     = local.subnet_ids
   create_cluster_parameter_group = true
   name                           = local.cluster_name
-  allowed_cidr_blocks            = [data.aws_vpc.supporting.cidr_block]
   cluster_parameters = [
     {
       name         = "audit_logs"
@@ -57,6 +55,26 @@ module "complete_cluster" {
       apply_method = "pending-reboot"
     }
   ]
+
+  security_group_ingress_rules = {
+    default = {
+      description = "Custom ingress traffic allowed to docdb cluster"
+      from_port   = 27017
+      to_port     = 27017
+      protocol    = "tcp"
+      cidr_blocks = [local.vpc_cidr]
+    }
+  }
+
+  security_group_egress_rules = {
+    default = {
+      description = "Custom egress traffic allowed to docdb cluster"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [local.vpc_cidr]
+    }
+  }
 
   tags = local.tags
 }

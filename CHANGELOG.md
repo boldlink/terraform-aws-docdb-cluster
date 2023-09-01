@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Feature: DocDB Global cluster.
-- Fix `Ensure DocDB has audit logs enabled`.
+- fix CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
+
+## [1.3.0] - 2023-08-29
+- fix: CKV_AWS_104: "Ensure DocDB has audit logs enabled"
+- fix: use internal subnets in supporting VPC
+- feat: dynamic ingress and egress rules for docdb cluster security group
 
 ## [1.2.1] - 2023-08-14
 - fix: Updated vpc version in supporting resources to resolve pre-commit alert for deprecated arguments
@@ -40,8 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added: DocumentDB example
 - Feature/fix
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.2.1...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.3.0...HEAD
 
+[1.3.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.3.0
 [1.2.1]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.2.1
 [1.2.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.2.0
 [1.1.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.1.0

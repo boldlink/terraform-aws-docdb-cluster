@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Feature: DocDB Global cluster.
 - fix CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
+- showcase usage of the following: cluster_identifier_prefix, external db_cluster_parameter_group_name, snapshot_identifier and promotion_tier
+
+## [1.3.1] - 2023-11-16
+- fix: usage of apply_immediately
+- fix: usage of backup_retention_period
+- fix: usage of deletion_protection
+- fix: usage of engine_version
+- fix: usage of preferred_backup_window
+- fix: usage of preferred_maintenance_window
+- fix: usage of skip_final_snapshot
+- fix: usage of storage_encrypted
+- fix: usage of cluster_timeouts
 
 ## [1.3.0] - 2023-08-29
 - fix: CKV_AWS_104: "Ensure DocDB has audit logs enabled"
@@ -45,8 +57,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added: DocumentDB example
 - Feature/fix
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-docdb/compare/1.3.1...HEAD
 
+[1.3.1]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.3.1
 [1.3.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.3.0
 [1.2.1]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.2.1
 [1.2.0]: https://github.com/boldlink/terraform-aws-docdb/releases/tag/1.2.0

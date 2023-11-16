@@ -1,7 +1,5 @@
 
-# #############################################
-# DocDB cluster Resource
-# #############################################
+# # DocDB cluster Resource
 resource "aws_docdb_cluster" "this" {
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
@@ -26,19 +24,15 @@ resource "aws_docdb_cluster" "this" {
   storage_encrypted               = var.storage_encrypted
   tags                            = var.tags
   vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, [aws_security_group.this[0].id])) #concat(var.vpc_security_group_ids, [aws_security_group.this.id])
-  dynamic "timeouts" {
-    for_each = var.cluster_timeouts
-    content {
-      create = lookup(timeouts.value, "create", "90m")
-      update = lookup(timeouts.value, "update", "90m")
-      delete = lookup(timeouts.value, "delete", "90m")
-    }
+
+  timeouts {
+    create = try(var.cluster_timeouts["create"], "90m")
+    update = try(var.cluster_timeouts["update"], "90m")
+    delete = try(var.cluster_timeouts["delete"], "90m")
   }
 }
 
-# #############################################
 # DocDB Parameter Group
-# #############################################
 resource "aws_docdb_cluster_parameter_group" "this" {
   count       = var.create_cluster_parameter_group ? 1 : 0
   name        = var.name
@@ -57,10 +51,7 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   tags = var.tags
 }
 
-
-# #############################################
 # DocDB SubnetGroup Group
-# #############################################
 resource "aws_docdb_subnet_group" "this" {
   name        = "${var.cluster_identifier}-subnet-group"
   name_prefix = var.subnet_name_prefix
@@ -69,9 +60,7 @@ resource "aws_docdb_subnet_group" "this" {
   tags        = var.tags
 }
 
-# #############################################
 # DocDB Cluster Instance
-# #############################################
 resource "aws_docdb_cluster_instance" "this" {
   count                        = var.instance_count
   apply_immediately            = var.apply_immediately
@@ -85,19 +74,15 @@ resource "aws_docdb_cluster_instance" "this" {
   preferred_maintenance_window = var.preferred_maintenance_window
   promotion_tier               = var.promotion_tier
   tags                         = var.tags
-  dynamic "timeouts" {
-    for_each = var.instance_timeouts
-    content {
-      create = lookup(timeouts.value, "create", "90m")
-      update = lookup(timeouts.value, "update", "90m")
-      delete = lookup(timeouts.value, "delete", "90m")
-    }
+
+  timeouts {
+    create = try(var.instance_timeouts["create"], "90m")
+    update = try(var.instance_timeouts["update"], "90m")
+    delete = try(var.instance_timeouts["delete"], "90m")
   }
 }
 
-# #############################################
 # Security Group for DocDB cluster
-# #############################################
 resource "aws_security_group" "this" {
   count       = var.create_security_group ? 1 : 0
   name        = "${coalesce(var.cluster_identifier, var.cluster_identifier_prefix)}-security-group"

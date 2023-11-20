@@ -34,7 +34,7 @@ module "complete_cluster" {
   name                           = local.cluster_name
   apply_immediately              = true
   backup_retention_period        = 14
-  deletion_protection            = true
+  deletion_protection            = false
   engine_version                 = "4.0.0"
   preferred_backup_window        = "00:00-02:00"
   preferred_maintenance_window   = "fri:03:00-fri:04:00"

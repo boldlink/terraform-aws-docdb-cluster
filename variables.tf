@@ -126,12 +126,8 @@ variable "tags" {
 
 variable "cluster_timeouts" {
   description = "aws_docdb_cluster provides the following Timeouts configuration options: create, update, delete"
-  type = list(object({
-    create = string
-    update = string
-    delete = string
-  }))
-  default = []
+  type        = map(string)
+  default     = {}
 }
 
 # DocDB SubnetGroup
@@ -191,12 +187,8 @@ variable "promotion_tier" {
 
 variable "instance_timeouts" {
   description = "aws_docdb_cluster_instance provides the following Timeouts configuration options: create, update, delete"
-  type = list(object({
-    create = string
-    update = string
-    delete = string
-  }))
-  default = []
+  type        = map(string)
+  default     = {}
 }
 
 # Cluster Parameter Group

@@ -14,14 +14,22 @@
 ## Description
 This Terraform module Manages a DocDB Cluster.
 
-Examples available [here](https://github.com/boldlink/terraform-aws-docdb/tree/main/examples)
+## Reasons to use this module over standard resources
+- **Removes Complexity**: The module abstracts away much of the underlying complexity of provisioning and managing Amazon DocumentDB clusters, making it easier to create and manage clusters with minimal effort.
+
+- **Reusable Configuration**: Define your DocumentDB cluster configuration once and reuse it across different projects or environments, reducing duplication and errors.
+
+- **Configuration Options**: The module exposes a wide range of configuration options, allowing you to fine-tune your DocumentDB cluster to meet your specific requirements.
+
+Examples available [here](./examples)
 
 ## Usage
-*NOTE*: These examples use the latest version of this module
+**NOTE**: These examples use the latest version of this module
 
-```console
+```hcl
 module "complete_cluster" {
-  source                    = "./../../"
+  source                    = "boldlink/docdb/aws"
+  version                   = "<specify_latest_version_here>"
   cluster_identifier        = local.cluster_name
   availability_zones        = data.aws_availability_zones.available.names
   identifier                = "${local.cluster_name}-instance"
@@ -55,7 +63,7 @@ module "complete_cluster" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.14.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.26.0 |
 
 ## Modules
 
@@ -85,7 +93,7 @@ No modules.
 | <a name="input_cluster_identifier"></a> [cluster\_identifier](#input\_cluster\_identifier) | (Optional, Forces new resources) The cluster identifier. If omitted, Terraform will assign a random, unique identifier. | `string` | `null` | no |
 | <a name="input_cluster_identifier_prefix"></a> [cluster\_identifier\_prefix](#input\_cluster\_identifier\_prefix) | (Optional, Forces new resource) Creates a unique cluster identifier beginning with the specified prefix. Conflicts with cluster\_identifier. | `string` | `null` | no |
 | <a name="input_cluster_parameters"></a> [cluster\_parameters](#input\_cluster\_parameters) | (Optional) A list of documentDB parameters to apply. Setting parameters to system default values may show a difference on imported resources. | <pre>list(object({<br>    name         = string<br>    value        = string<br>    apply_method = string<br>  }))</pre> | `[]` | no |
-| <a name="input_cluster_timeouts"></a> [cluster\_timeouts](#input\_cluster\_timeouts) | aws\_docdb\_cluster provides the following Timeouts configuration options: create, update, delete | <pre>list(object({<br>    create = string<br>    update = string<br>    delete = string<br>  }))</pre> | `[]` | no |
+| <a name="input_cluster_timeouts"></a> [cluster\_timeouts](#input\_cluster\_timeouts) | aws\_docdb\_cluster provides the following Timeouts configuration options: create, update, delete | `map(string)` | `{}` | no |
 | <a name="input_create_cluster_parameter_group"></a> [create\_cluster\_parameter\_group](#input\_create\_cluster\_parameter\_group) | Whether to create cluster parameter group | `bool` | `false` | no |
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Whether to create a Security Group for DocDB cluster. | `bool` | `true` | no |
 | <a name="input_db_cluster_parameter_group_name"></a> [db\_cluster\_parameter\_group\_name](#input\_db\_cluster\_parameter\_group\_name) | (Optional) A cluster parameter group to associate with the cluster. | `string` | `null` | no |
@@ -98,7 +106,7 @@ No modules.
 | <a name="input_identifier_prefix"></a> [identifier\_prefix](#input\_identifier\_prefix) | (Optional, Forces new resource) Creates a unique identifier beginning with the specified prefix. Conflicts with identifier | `string` | `null` | no |
 | <a name="input_instance_class"></a> [instance\_class](#input\_instance\_class) | (Required) The instance class to use. For details on CPU and memory, see Scaling for DocDB Instances. db.r5.large, db.r5.xlarge ,db.r5.2xlarge, db.r5.4xlarge, db.r5.12xlarge, db.r5.24xlarge, db.r4.large, db.r4.xlarge, db.r4.2xlarge, db.r4.4xlarge, db.r4.8xlarge, db.r4.16xlarge, db.t3.medium | `string` | `"db.t3.medium"` | no |
 | <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of DocumentDB cluster instances to be created. | `number` | `3` | no |
-| <a name="input_instance_timeouts"></a> [instance\_timeouts](#input\_instance\_timeouts) | aws\_docdb\_cluster\_instance provides the following Timeouts configuration options: create, update, delete | <pre>list(object({<br>    create = string<br>    update = string<br>    delete = string<br>  }))</pre> | `[]` | no |
+| <a name="input_instance_timeouts"></a> [instance\_timeouts](#input\_instance\_timeouts) | aws\_docdb\_cluster\_instance provides the following Timeouts configuration options: create, update, delete | `map(string)` | `{}` | no |
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | (Optional) The ARN for the KMS encryption key. When specifying kms\_key\_id, storage\_encrypted needs to be set to true. | `string` | `null` | no |
 | <a name="input_master_password"></a> [master\_password](#input\_master\_password) | (Required unless a snapshot\_identifier or unless a global\_cluster\_identifier is provided when the cluster is the 'secondary' cluster of a global database) Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file. | `string` | n/a | yes |
 | <a name="input_master_username"></a> [master\_username](#input\_master\_username) | (Required unless a snapshot\_identifier or unless a global\_cluster\_identifier is provided when the cluster is the 'secondary' cluster of a global database) Username for the master DB user | `string` | n/a | yes |
@@ -184,4 +192,4 @@ make cleansupporting
 make cleanstatefiles
 ```
 
-#### BOLDLink-SIG 2022
+#### BOLDLink-SIG 2023

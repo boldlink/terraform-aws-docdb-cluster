@@ -12,7 +12,6 @@ resource "random_password" "master_password" {
 }
 
 module "kms_key" {
-  #checkov:skip=CKV_TF_1:Ensure Terraform module sources use a commit hash
   source      = "boldlink/kms/aws"
   description = "kms key for ${local.cluster_name}"
   alias_name  = "alias/${local.cluster_name}-key-alias"
@@ -33,6 +32,27 @@ module "complete_cluster" {
   subnet_ids                     = local.subnet_ids
   create_cluster_parameter_group = true
   name                           = local.cluster_name
+  apply_immediately              = true
+  backup_retention_period        = 14
+  deletion_protection            = false
+  engine_version                 = "4.0.0"
+  preferred_backup_window        = "00:00-02:00"
+  preferred_maintenance_window   = "fri:03:00-fri:04:00"
+  skip_final_snapshot            = true
+  storage_encrypted              = true
+
+  cluster_timeouts = {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
+  }
+
+  instance_timeouts = {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
+  }
+
   cluster_parameters = [
     {
       name         = "audit_logs"

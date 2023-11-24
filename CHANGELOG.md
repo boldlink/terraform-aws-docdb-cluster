@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Feature: DocDB Global cluster.
 - fix CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
-- showcase usage of the following: cluster_identifier_prefix, external db_cluster_parameter_group_name
 
 ## [1.3.2] - 2023-11-23
 - fix: usage of cluster_identifier_prefix
@@ -54,7 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2022-03-22
 - Feature: Document db cluster Instance
 - Feature: DocumentDB SubnetGroup
-- Feature/fix
 
 ## [1.0.0] - YYYY-MM-DD
 ### Description

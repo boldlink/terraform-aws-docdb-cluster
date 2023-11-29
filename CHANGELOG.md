@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: usage of cluster_identifier_prefix
 - fix: usage of external db_cluster_parameter_group_name
 - fix: usage of promotion_tier
+- fix: usage of cluster snapshot and snapshot_identifier
 
 ## [1.3.1] - 2023-11-16
 - fix: usage of apply_immediately

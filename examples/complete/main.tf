@@ -35,7 +35,7 @@ module "complete_cluster" {
   apply_immediately              = true
   backup_retention_period        = 14
   deletion_protection            = false
-  engine_version                 = "4.0.0"
+  engine_version                 = "5.0.0"
   preferred_backup_window        = "00:00-02:00"
   preferred_maintenance_window   = "fri:03:00-fri:04:00"
   skip_final_snapshot            = true
@@ -99,6 +99,11 @@ module "complete_cluster" {
   tags = local.tags
 }
 
+resource "aws_docdb_cluster_snapshot" "snapshot" {
+  db_cluster_identifier          = module.complete_cluster.id
+  db_cluster_snapshot_identifier = "${local.cluster_name}-snap-0123"
+}
+
 resource "aws_docdb_cluster_parameter_group" "external" {
   name        = "docdb-cluster-pg"
   family      = "docdb5.0"
@@ -133,8 +138,8 @@ module "external_parameter_group" {
   skip_final_snapshot             = true
   storage_encrypted               = true
   db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.external.id
-  #snapshot_identifier             = var.prefix # Use this to create from a snapshot
-  promotion_tier = "2"
+  snapshot_identifier             = aws_docdb_cluster_snapshot.snapshot.db_cluster_snapshot_identifier
+  promotion_tier                  = "2"
 
   security_group_ingress_rules = {
     default = {

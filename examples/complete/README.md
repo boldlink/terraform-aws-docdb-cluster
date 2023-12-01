@@ -37,7 +37,7 @@ make tfdestroy
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.26.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.28.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
 
 ## Modules
@@ -45,12 +45,15 @@ make tfdestroy
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_complete_cluster"></a> [complete\_cluster](#module\_complete\_cluster) | ./../../ | n/a |
+| <a name="module_external_parameter_group"></a> [external\_parameter\_group](#module\_external\_parameter\_group) | ./../../ | n/a |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_docdb_cluster_parameter_group.external](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_parameter_group) | resource |
+| [aws_docdb_cluster_snapshot.snapshot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_snapshot) | resource |
 | [random_password.master_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.master_username](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_subnet.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
@@ -61,6 +64,7 @@ make tfdestroy
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix for the resource name | `string` | `"external"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the created resources | `map(string)` | <pre>{<br>  "Department": "DevOps",<br>  "Environment": "examples",<br>  "InstanceScheduler": true,<br>  "LayerId": "cExample",<br>  "LayerName": "cExample",<br>  "Owner": "Boldlink",<br>  "Project": "Examples",<br>  "user::CostCenter": "terraform-registry"<br>}</pre> | no |
 
 ## Outputs

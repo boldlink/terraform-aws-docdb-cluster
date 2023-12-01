@@ -1,5 +1,8 @@
-
 # # DocDB cluster Resource
+locals {
+  cluster_identifier = var.cluster_identifier != null ? var.cluster_identifier : replace(var.cluster_identifier_prefix, "-", "")
+}
+
 resource "aws_docdb_cluster" "this" {
   apply_immediately               = var.apply_immediately
   availability_zones              = var.availability_zones
@@ -12,7 +15,7 @@ resource "aws_docdb_cluster" "this" {
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   engine_version                  = var.engine_version
   engine                          = var.engine
-  final_snapshot_identifier       = "${var.cluster_identifier}-final-snapshot"
+  final_snapshot_identifier       = "${local.cluster_identifier}-final-snapshot"
   kms_key_id                      = var.kms_key_id
   master_password                 = var.master_password
   master_username                 = var.master_username
@@ -23,7 +26,7 @@ resource "aws_docdb_cluster" "this" {
   snapshot_identifier             = var.snapshot_identifier
   storage_encrypted               = var.storage_encrypted
   tags                            = var.tags
-  vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, [aws_security_group.this[0].id])) #concat(var.vpc_security_group_ids, [aws_security_group.this.id])
+  vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, [aws_security_group.this[0].id]))
 
   timeouts {
     create = try(var.cluster_timeouts["create"], "90m")
@@ -53,9 +56,9 @@ resource "aws_docdb_cluster_parameter_group" "this" {
 
 # DocDB SubnetGroup Group
 resource "aws_docdb_subnet_group" "this" {
-  name        = "${var.cluster_identifier}-subnet-group"
+  name        = "${local.cluster_identifier}-subnet-group"
   name_prefix = var.subnet_name_prefix
-  description = "${var.cluster_identifier} subnet group."
+  description = "${local.cluster_identifier} subnet group."
   subnet_ids  = var.subnet_ids
   tags        = var.tags
 }
@@ -85,9 +88,9 @@ resource "aws_docdb_cluster_instance" "this" {
 # Security Group for DocDB cluster
 resource "aws_security_group" "this" {
   count       = var.create_security_group ? 1 : 0
-  name        = "${coalesce(var.cluster_identifier, var.cluster_identifier_prefix)}-security-group"
+  name        = "${local.cluster_identifier}-security-group"
   vpc_id      = var.vpc_id
-  description = "${coalesce(var.cluster_identifier, var.cluster_identifier_prefix)} Security Group"
+  description = "${local.cluster_identifier} Security Group"
   tags        = var.tags
 }
 

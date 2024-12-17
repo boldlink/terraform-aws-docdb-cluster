@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Feature: DocDB Global cluster.
 - fix CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
+- fix security group association if `var.create_security_group` is `false`
 
 ## [1.3.2] - 2023-11-23
 - fix: usage of cluster_identifier_prefix

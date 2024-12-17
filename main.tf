@@ -26,7 +26,7 @@ resource "aws_docdb_cluster" "this" {
   snapshot_identifier             = var.snapshot_identifier
   storage_encrypted               = var.storage_encrypted
   tags                            = var.tags
-  vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, [aws_security_group.this[0].id]))
+  vpc_security_group_ids          = compact(concat(var.vpc_security_group_ids, aws_security_group.this[*].id))
 
   timeouts {
     create = try(var.cluster_timeouts["create"], "90m")
